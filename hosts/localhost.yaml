@@ -9,9 +9,8 @@ actions:
   - description: "Copying from Template(a) to B"
     name:
       copy_from_template:
-        source: 'source.template'
-        destination: 'destination_template'
+        source: '/tmp/source_template'
+        destination: '/tmp/destination_template'
         variables: {Host: localhost, Name: test}
-        mode: 0123
-        test: 'pisello'
+        mode: '0123'
 ...
