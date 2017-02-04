@@ -1,0 +1,17 @@
+---
+host: localhost
+actions:
+  - description: "Copying A to B"
+    name:
+      copy:
+        source: '/tmp/source'
+        destination: '/tmp/destination'
+  - description: "Copying from Template(a) to B"
+    name:
+      copy_from_template:
+        source: 'source.template'
+        destination: 'destination_template'
+        variables: {Host: localhost, Name: test}
+        mode: 0123
+        test: 'pisello'
+...

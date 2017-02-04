@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import argparse
+import datetime
+import logging
+
+from ops_registry import OpsRegistry
+from parser import HostParser
+from modules.fileops import copy_from_template
+
+
+def setup_logging(verbose):
+   logger = logging.getLogger('mgmt')
+   logger.setLevel(logging.DEBUG)
+
+   fh = logging.FileHandler('mgmt.log')
+   fh.setLevel(logging.DEBUG)
+
+   ch = logging.StreamHandler()
+   if verbose:
+      ch.setLevel(logging.DEBUG)
+   else:
+      ch.setLevel(logging.ERROR)
+
+   formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+   fh.setFormatter(formatter)
+   ch.setFormatter(formatter)
+
+   logger.addHandler(fh)
+   logger.addHandler(ch)
+
+def main(args):
+   setup_logging(args.verbose)
+   logger = logging.getLogger('mgmt')
+
+   start = datetime.datetime.now()
+   logger.info('MGMT: started')
+
+   ops_registry=OpsRegistry()
+   ops_registry.add_operation('copy_from_template', copy_from_template)
+
+   host_config = args.host_config
+   host = HostParser(host_config, ops_registry=ops_registry)
+
+   parsed_action = host.parse()
+   for action in parsed_action:
+      host.execute(action)
+
+   end = datetime.datetime.now()
+   duration = str(end - start)
+   logger.info('MGMT: finished. Duration %s' % duration)
+
+if __name__ == '__main__':
+   parser = argparse.ArgumentParser(description='MGMT: push user-defined configuration to the local machine')
+   parser.add_argument('--host-config', help='Host configuration', required=True)
+   parser.add_argument('--host-config-directory', help='Host configuration directory (where all host-config file exists')
+   parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                       action="store_true")
+   args = parser.parse_args()
+   main(args)
