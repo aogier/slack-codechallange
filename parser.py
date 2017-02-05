@@ -27,8 +27,11 @@ class HostParser(object):
         for k, v in action['action_params'].items():
             t = {k: v}
             func = partial(func, **t)
-
-        func()
+        try:
+            func()
+        except TypeError as e:
+            self.logger.error(e)
+            self.logger.error('Please kill the application')
 
     def parse(self):
         try:
