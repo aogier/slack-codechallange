@@ -1,24 +1,25 @@
 ---
 host: localhost
 actions:
-  - description: "Copying A to B"
+  - description: 'Copying index.php to apache document root'
     name:
       copy:
-        source: '/tmp/source'
-        destination: '/tmp/destination'
-  - description: "Copying from Template(a) to B"
+        source: '/tmp/index.php'
+        destination: '/var/www/html'
+  - description: 'Copying from Template(a) to B'
     name:
       copy_from_template:
         source: '/tmp/source_template'
         destination: '/tmp/destination_template'
         variables: {Host: localhost, Name: test}
         mode: '0123'
-  - description: "Install apache"
+  - description: 'Install apache'
     name:
       install_package:
-        packagename: "apache2"
-  - description: "Install php"
+        packagename: 'apache2'
+        cmd_after: 'rm /var/www/html/index.html'
+  - description: 'Install php'
     name:
       install_package:
-        packagename: "php5 libapache2-mod-php5"
+        packagename: 'php5 libapache2-mod-php5'
 ...
