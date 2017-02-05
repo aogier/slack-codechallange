@@ -76,3 +76,6 @@ actions:
 ...
 ```
 
+### Test
+
+`cd test && python parser_test.py`
