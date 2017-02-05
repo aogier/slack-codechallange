@@ -21,7 +21,12 @@ def _exec_command(cmd_line):
 
 def install_package(packagename, notice=None, cmd_before=None, cmd_after=None):
     cmd_line = 'apt-get install -y --quiet %s' % packagename
+    if cmd_before:
+        _exec_command(cmd_before)
     success = _exec_command(cmd_line)
+    if cmd_after:
+        _exec_command(cmd_after)
+
     if success:
         logger.info('Package %s installed successfully' % packagename)
     else:
@@ -30,7 +35,7 @@ def install_package(packagename, notice=None, cmd_before=None, cmd_after=None):
 
 def remove_package(packagename, notice=None, cmd_before=None, cmd_after=None):
     if cmd_before:
-        _exec_commnad(cmd_before)
+        _exec_command(cmd_before)
     cmd_line = 'apt-get remove -y --quiet %s' % packagename
     success = _exec_command(cmd_line)
     if success:
