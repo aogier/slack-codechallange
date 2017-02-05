@@ -4,15 +4,8 @@ actions:
   - description: 'Copying index.php to apache document root'
     name:
       copy:
-        source: '/tmp/index.php'
+        source: 'data/index.php'
         destination: '/var/www/html'
-  - description: 'Copying from Template(a) to B'
-    name:
-      copy_from_template:
-        source: '/tmp/source_template'
-        destination: '/tmp/destination_template'
-        variables: {Host: localhost, Name: test}
-        mode: '0123'
   - description: 'Install apache'
     name:
       install_package:
