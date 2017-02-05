@@ -1,0 +1,8 @@
+---
+host: localhost
+actions:
+  - description:
+    name:
+      test1:
+        paramA: 'paramA'
+...
