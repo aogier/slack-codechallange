@@ -11,7 +11,7 @@ def copy(source, destination, mode='0777'):
     logger.info('copy() called')
     try:
         shutil.copy(source, destination)
-        os.chmod(destination, mode)
+        os.chmod(destination, int(mode))
     except FileNotFoundError as e:
         logger.error('copy of %s to %s failed.' % (source, destination))
         logger.error(e)
