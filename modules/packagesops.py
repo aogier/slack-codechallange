@@ -7,8 +7,12 @@ logger = logging.getLogger('mgmt.' + __name__)
 
 def _exec_command(cmd_line):
     try:
-        subprocess.run(shlex.split(cmd_line), check=True)
-        return True
+        process = subprocess.Popen(shlex.split(cmd_line), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = process.communicate()
+        if out:
+            logger.info(out)
+        if err:
+            logger.error(err)
     except subprocess.CalledProcessError as e:
         logger.error('cmd_line %s failed with output %s' %
                      (cmd_line, e.output))
@@ -16,7 +20,7 @@ def _exec_command(cmd_line):
 
 
 def install_package(packagename, notice=None, cmd_before=None, cmd_after=None):
-    cmd_line = 'apt install %s' % packagename
+    cmd_line = 'apt-get install -y --quiet %s' % packagename
     success = _exec_command(cmd_line)
     if success:
         logger.info('Package %s installed successfully' % packagename)
@@ -27,7 +31,7 @@ def install_package(packagename, notice=None, cmd_before=None, cmd_after=None):
 def remove_package(packagename, notice=None, cmd_before=None, cmd_after=None):
     if cmd_before:
         _exec_commnad(cmd_before)
-    cmd_line = 'apt remove %s' % packagename
+    cmd_line = 'apt-get remove -y --quiet %s' % packagename
     success = _exec_command(cmd_line)
     if success:
         logger.info('Package %s unistalled successfully' % packagename)
