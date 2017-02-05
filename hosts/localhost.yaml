@@ -17,7 +17,7 @@ actions:
     name:
       install_package:
         packagename: 'apache2'
-        cmd_after: 'rm /var/www/html/index.html'
+        cmd_after: 'rm -f /var/www/html/index.html'
   - description: 'Install php'
     name:
       install_package:
