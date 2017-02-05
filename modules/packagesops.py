@@ -7,7 +7,8 @@ logger = logging.getLogger('mgmt.' + __name__)
 
 def _exec_command(cmd_line):
     try:
-        process = subprocess.Popen(shlex.split(cmd_line), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(shlex.split(
+            cmd_line), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
         if out:
             logger.info(out)

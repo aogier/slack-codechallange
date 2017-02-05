@@ -8,11 +8,13 @@ sys.path.insert(0, dirname(dirname(realpath(__file__))))
 from parser import HostParser
 from ops_registry import OpsRegistry
 
+
 def testop1(paramA, paramB, paramC='paramC'):
     pass
 
 ops_registry = OpsRegistry()
 ops_registry.add_operation('test1', testop1)
+
 
 class HostParserTest(unittest.TestCase):
     host_parser1 = HostParser('test_config_broken.yaml',
