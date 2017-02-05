@@ -13,4 +13,12 @@ actions:
         destination: '/tmp/destination_template'
         variables: {Host: localhost, Name: test}
         mode: '0123'
+  - description: "Install apache"
+    name:
+      install_package:
+        packagename: "apache2"
+  - description: "Install php"
+    name:
+      install_package:
+        packagename: "php5 libapache2-mod-php5"
 ...
