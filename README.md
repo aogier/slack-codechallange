@@ -9,6 +9,8 @@ The host configuration syntax is mostly copied from ansible (or maybe because it
 ### Usage
 `mgmt -h` gives you a complete list of options.
 
+Note some actions might requires root privileges so either run it via ``sudo`` or execute as root.
+
 By default the only things you would need for is to specify a **--host-config \<filename>** to tell mgmt what action perform on the server.
 
 Depending the kind of installation that you went for (global or local) you might want to adjust the **--host-config-directory** variable.
