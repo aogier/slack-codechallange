@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import copy
 import datetime
 import logging
 
@@ -45,8 +46,19 @@ def main(args):
    host = HostParser(host_config, ops_registry=ops_registry)
 
    parsed_action = host.parse()
-   for action in parsed_action:
-      host.execute(action)
+   """
+   This is an attempt to handle dependencies. Creating a dependency graph is outside
+   the scope of ths exercise but its nice to have. It support only one level of
+   dependency.
+   """
+   for action_name, action_params in parsed_action.items():
+      if 'dependencies' in parsed_action[action_name] and action_params['dependencies']:
+         for dependency in action_params['dependencies']:
+            host.execute(copy.deepcopy(parsed_action[dependency]))
+         host.execute(action_params)
+      else:
+         host.execute(action_params)
+
 
    end = datetime.datetime.now()
    duration = str(end - start)

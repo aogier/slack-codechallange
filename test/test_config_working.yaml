@@ -1,10 +1,12 @@
 ---
 host: localhost
 actions:
-  - description:
-    name:
+  - meta:
+      description:
+      dependencies:
+    name: test
+    action_name:
       test1:
         paramA: 'paramA'
         paramB: 'paramB'
-
 ...

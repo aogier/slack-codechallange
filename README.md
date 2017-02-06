@@ -38,12 +38,18 @@ Given the function
 The corrisponding necessary action definition should look like:
 
 ```
+---
+host: localhost
 actions:
-	- description: This is a very important action
-	  name:
-	    func:
-		   paramA: "something"
-		   paramB: "something"
+  - meta:
+      description:
+      dependencies:
+    name: test
+    action_name:
+      test1:
+        paramA: 'paramA'
+        paramB: 'paramB'
+...
 ```
 
 
@@ -52,30 +58,30 @@ actions:
 ---
 host: localhost
 actions:
-  - description: 'Copying index.php to apache document root'
-    name:
+  - name: install_index_php
+    meta:
+     dependencies: ['install_apache2']
+     description: 'Copying index.php to apache document root'
+    action_name:
       copy:
-        source: '/tmp/index.php'
+        source: 'data/index.php'
         destination: '/var/www/html'
-  - description: 'Copying from Template(a) to B'
-    name:
-      copy_from_template:
-        source: '/tmp/source_template'
-        destination: '/tmp/destination_template'
-        variables: {Host: localhost, Name: test}
-        mode: '0123'
-  - description: 'Install apache'
-    name:
+  - name: 'install_apache2'
+    meta:
+      description: 'Install apache'
+    action_name:
       install_package:
         packagename: 'apache2'
-        cmd_after: 'rm /var/www/html/index.html'
-  - description: 'Install php'
-    name:
+        cmd_after: 'rm -f /var/www/html/index.html'
+  - name: install_php5
+    meta:
+      description: 'Install php'
+      dependecies: ['install_apache2']
+    action_name:
       install_package:
         packagename: 'php5 libapache2-mod-php5'
 ...
 ```
-
 ### Test
 
 `cd test && python parser_test.py`

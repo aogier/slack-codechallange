@@ -7,6 +7,8 @@ import yaml
 
 from ops_registry import OpsRegistry
 
+REQUIRED_PARAMS = ['name']
+
 
 class HostParser(object):
 
@@ -14,11 +16,12 @@ class HostParser(object):
         self.host_properties_location = host_properties_location
         self.host_config = host_config
         self.ops_registry = ops_registry
-        self.parsed_action = []
+        self.parsed_action = {}
         self.logger = logging.getLogger('mgmt.' + __name__)
 
     def execute(self, action):
         func = self.ops_registry.operations_registry[action['action_name']]
+
         # Positional arguments
         for m in action['mandatory_params']:
             func = partial(func, action['action_params'][m])
@@ -31,7 +34,6 @@ class HostParser(object):
             func()
         except TypeError as e:
             self.logger.error(e)
-            self.logger.error('Please kill the application')
 
     def parse(self):
         try:
@@ -40,17 +42,31 @@ class HostParser(object):
             with open(host_config_file, 'r') as f:
                 config = yaml.load(f)
                 for action in config['actions']:
-                    for action_name, action_params in action['name'].items():
+                    """
+                    Check mandatory params are in place. This is required to
+                    build ordered set of actions
+                    """
+                    for required_param in REQUIRED_PARAMS:
+                        if required_param not in action.keys():
+                            return False
+
+                    name = action['name']
+                    dependencies = []
+                    if 'dependencies' in action['meta'].keys():
+                        dependencies = action['meta']['dependencies']
+
+                    for action_name, action_params in action['action_name'].items():
                         """
-                        While checking we also return the mandatory params in order to execute
-                        eventually the action.
+                        While checking we also return the mandatory
+                        params in order to execute eventually the action.
                         """
                         mandatory_params = self._check(
                             action_name, action_params)
                         if mandatory_params:
-                            self.parsed_action.append({'action_name': action_name,
-                                                       'action_params': action_params,
-                                                       'mandatory_params': mandatory_params})
+                            self.parsed_action[name] = {'dependencies': dependencies,
+                                                        'action_name': action_name,
+                                                        'action_params': action_params,
+                                                        'mandatory_params': mandatory_params}
                         else:
                             self.logger.info(
                                 'Action %s could not be added' % action_name)

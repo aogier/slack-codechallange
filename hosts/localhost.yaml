@@ -1,18 +1,26 @@
 ---
 host: localhost
 actions:
-  - description: 'Copying index.php to apache document root'
-    name:
+  - name: install_index_php
+    meta:
+     dependencies: ['install_apache2']
+     description: 'Copying index.php to apache document root'
+    action_name:
       copy:
         source: 'data/index.php'
         destination: '/var/www/html'
-  - description: 'Install apache'
-    name:
+  - name: 'install_apache2'
+    meta:
+      description: 'Install apache'
+    action_name:
       install_package:
         packagename: 'apache2'
         cmd_after: 'rm -f /var/www/html/index.html'
-  - description: 'Install php'
-    name:
+  - name: install_php5
+    meta:
+      description: 'Install php'
+      dependecies: ['install_apache2']
+    action_name:
       install_package:
         packagename: 'php5 libapache2-mod-php5'
 ...
