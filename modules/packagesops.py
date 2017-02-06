@@ -17,6 +17,8 @@ def _exec_command(cmd_line):
     except subprocess.CalledProcessError as e:
         logger.error('cmd_line %s failed with output %s' %
                      (cmd_line, e.output))
+    except FileNotFoundError as e:
+        logger.error('cmd_line: %s -- command not found' % cmd_line)
         return False
 
 
