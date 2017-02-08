@@ -4,6 +4,7 @@ import argparse
 import copy
 import datetime
 import logging
+import sys
 
 from ops_registry import OpsRegistry
 from parser import HostParser
@@ -46,6 +47,10 @@ def main(args):
    host = HostParser(host_config, ops_registry=ops_registry)
 
    parsed_action = host.parse()
+   if not parsed_action:
+      logger.error('Could not parse %s. Abort' % host_config)
+      sys.exit(1)
+
    """
    This is an attempt to handle dependencies. Creating a dependency graph is outside
    the scope of ths exercise but its nice to have. It support only one level of
