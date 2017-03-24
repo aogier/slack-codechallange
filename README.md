@@ -1,5 +1,7 @@
 # Mgmt
 
+A configuration mgmt tool
+
 ### History
 
 The name of this tool has been taken from [mgmt](https://github.com/purpleidea/mgmt)
